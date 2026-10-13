@@ -31,13 +31,21 @@ app. **Grade** summarises how much working functionality survives the whole sequ
 </table>
 </div>
 
-## Running
+## Running examples
+
+Build the harness image once, serve the model (or use an API) and run it on which apps (`1-32`
+for all, or `1,4,6,11`) and how many in parallel; results land in `runs/<run name>/`, and
+`python3 -m evoweb.score_run` scores them exactly like the paper. The outputs shown are from our
+own runs on all 32 apps. Any provider or model works in their place: Anthropic, OpenAI,
+OpenRouter, any OpenAI-compatible API, or weights served locally with vLLM;
+[`harness/README.md`](harness/README.md) lists every variable.
 
 ### 1. Install
 
 ```bash
 docker build -f harness/Dockerfile -t evoweb-harness:latest .
-pip install -e .                       # Python >= 3.10
+pip install -r requirements.txt        # scoring: Python >= 3.10
+pip install -e .                       # the evoweb command
 ```
 
 ### 2. Serve the model
@@ -120,12 +128,21 @@ with the key in `MODEL_API_KEY`.
 ### 4. Score
 
 ```bash
-python3 -m evoweb.score_run runs/qwen397b
+python3 -m evoweb.score_run runs/haiku
 ```
 
-scores a run exactly like the paper. To compare it with the paper's runs of the same model
-(released for the four Anthropic models): `python3 -m evoweb.compare_to_released "Haiku 4.5" runs/haiku`.
-[`harness/README.md`](harness/README.md) lists every harness variable;
+Our runs of the examples above (the GLM 5.2 one served on our own GPUs):
+
+```
+| run       | apps | Grade | Survival | Turns / request |
+| haiku     | 32   | 0.365 | 4.29     | 12.6            |
+| qwen397b  | 32   | 0.310 | 3.67     | 5.7             |
+| qwen-both | 32   | 0.322 | 3.88     | 5.7             |
+| glm52     | 32   | 0.518 | 5.54     | 12.4            |
+```
+
+To compare a run with the paper's runs of the same model (released for the four Anthropic
+models): `python3 -m evoweb.compare_to_released "Haiku 4.5" runs/haiku`.
 [`infra/README.md`](infra/README.md) covers running many models at once on Kubernetes.
 
 ## What is where
