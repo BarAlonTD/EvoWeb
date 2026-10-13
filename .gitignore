@@ -16,3 +16,4 @@ __pycache__/
 tests/smoke_sets/
 .nfs*
 .DS_Store
+*.egg-info/

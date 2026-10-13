@@ -1,6 +1,6 @@
 # Running EvoWeb on Kubernetes (optional)
 
-You do not need a cluster: `harness/run_local.sh` runs everything on one machine with Docker.
+You do not need a cluster: `evoweb run` (or `harness/run_local.sh`) runs everything on one machine with Docker.
 A run is 32 app ladders of 10 requests each, and a ladder takes hours, so for many models or
 replicates it pays to run one pod per ladder on Kubernetes. This is how the paper's runs were
 produced. `launch.sh` renders `job-template.yaml` into one Indexed Job per run, waits for it,
